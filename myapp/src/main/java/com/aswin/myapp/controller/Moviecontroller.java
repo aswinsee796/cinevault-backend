@@ -36,6 +36,10 @@ public class Moviecontroller {
     public List<Movies> getDetails() {
         return movser.getAllDetails();
     }
+    @GetMapping("/ping")
+    public String ping() {
+        return "Backend is alive!";
+    }
 
 //     Accept username in JSON body, fetch User, and save Movie
     @PostMapping("/{username}/addmov")
