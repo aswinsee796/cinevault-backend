@@ -15,7 +15,7 @@ import com.aswin.myapp.service.UserService;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "https://cinevault1.netlify.app")
+@CrossOrigin(origins = "https://cinivault2.netlify.app")
 public class AuthController {
 
     @Autowired
