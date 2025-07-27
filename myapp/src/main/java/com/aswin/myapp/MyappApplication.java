@@ -12,10 +12,4 @@ public class MyappApplication {
     }
 }
 
-@RestController
-class HealthController {
-    @GetMapping("/")
-    public String root() {
-        return "Backend is alive!";
-    }
-}
+
