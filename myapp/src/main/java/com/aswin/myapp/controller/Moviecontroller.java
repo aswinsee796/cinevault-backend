@@ -1,25 +1,3 @@
-package com.aswin.myapp.controller;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import com.aswin.myapp.entity.Movies;
-import com.aswin.myapp.entity.User;
-import com.aswin.myapp.service.Movieservice;
-import com.aswin.myapp.repository.UserRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/Movies")
@@ -33,18 +11,11 @@ public class Moviecontroller {
     @Autowired
     private UserRepository userRepository;
 
-    // Health check for Railway
-    @GetMapping("/")
-    public String home() {
-        return "Backend is up!";
-    }
-
     @GetMapping("/getmov")
     public List<Movies> getDetails() {
         return movser.getAllDetails();
     }
 
-    // Accept username in JSON body, fetch User, and save Movie
     @PostMapping("/{username}/addmov")
     public ResponseEntity<?> postDetails(@PathVariable String username, @RequestBody Movies m) {
         Optional<User> userOpt = userRepository.findByUsername(username);
@@ -52,8 +23,8 @@ public class Moviecontroller {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
 
-        m.setUser(userOpt.get());  // attach the User entity to Movies
-        Movies savedMovie = movser.SaveDetails(m); // existing method
+        m.setUser(userOpt.get());
+        Movies savedMovie = movser.SaveDetails(m);
         return ResponseEntity.ok(savedMovie);
     }
 
@@ -66,10 +37,8 @@ public class Moviecontroller {
 
             String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
             Path filePath = userDir.resolve(filename);
-
             Files.write(filePath, file.getBytes());
 
-            // Build URL dynamically for Railway environment
             String imageUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path("/Movies/uploads/")
                     .path(username + "/")
@@ -91,7 +60,6 @@ public class Moviecontroller {
             return ResponseEntity.ok()
                     .header("Content-Type", Files.probeContentType(filePath))
                     .body(imageBytes);
-
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
