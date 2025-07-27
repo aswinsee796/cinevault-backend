@@ -39,11 +39,6 @@ public class Moviecontroller {
         return "Backend is up!";
     }
 
-    @GetMapping("/ping")
-    public String ping() {
-        return "Backend is alive!";
-    }
-
     @GetMapping("/getmov")
     public List<Movies> getDetails() {
         return movser.getAllDetails();
