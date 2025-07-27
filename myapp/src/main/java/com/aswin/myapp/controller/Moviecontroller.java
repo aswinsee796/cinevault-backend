@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-@CrossOrigin("https://cinevault1.netlify.app")
+@CrossOrigin("https://cinivault2.netlify.app")
 @RestController
 @RequestMapping("/Movies")
 public class Moviecontroller {
