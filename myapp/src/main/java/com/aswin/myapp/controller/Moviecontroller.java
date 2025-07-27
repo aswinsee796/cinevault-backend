@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @CrossOrigin("*")
 @RestController
@@ -32,12 +33,23 @@ public class Moviecontroller {
     @Autowired
     private UserRepository userRepository;
 
+    // Health check for Railway
+    @GetMapping("/")
+    public String home() {
+        return "Backend is up!";
+    }
+
+    @GetMapping("/ping")
+    public String ping() {
+        return "Backend is alive!";
+    }
+
     @GetMapping("/getmov")
     public List<Movies> getDetails() {
         return movser.getAllDetails();
     }
 
-//     Accept username in JSON body, fetch User, and save Movie
+    // Accept username in JSON body, fetch User, and save Movie
     @PostMapping("/{username}/addmov")
     public ResponseEntity<?> postDetails(@PathVariable String username, @RequestBody Movies m) {
         Optional<User> userOpt = userRepository.findByUsername(username);
@@ -49,8 +61,6 @@ public class Moviecontroller {
         Movies savedMovie = movser.SaveDetails(m); // existing method
         return ResponseEntity.ok(savedMovie);
     }
-
-
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile file,
@@ -64,7 +74,13 @@ public class Moviecontroller {
 
             Files.write(filePath, file.getBytes());
 
-            String imageUrl = "http://localhost:8080/Movies/uploads/" + username + "/" + filename;
+            // Build URL dynamically for Railway environment
+            String imageUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/Movies/uploads/")
+                    .path(username + "/")
+                    .path(filename)
+                    .toUriString();
+
             return ResponseEntity.ok(imageUrl);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload image");
